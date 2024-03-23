@@ -1,11 +1,14 @@
+
 import React, { useState } from "react";
+import CustomButton from "./CustomButton";
 import { useForm } from "react-hook-form";
+import TextInput from "./TextInput";
+import { BiImages } from "react-icons/bi";
 import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import TextInput from "./TextInput";
+import { UpdateProfile, UserLogin } from "../redux/userSlice";
+import { apiRequest, handleFileUpload } from "../utils";
 import Loading from "./Loading";
-import CustomButton from "./CustomButton";
-import { UpdateProfile } from "../redux/userSlice";
 
 const EditProfile = () => {
   const { user } = useSelector((state) => state.user);
@@ -23,26 +26,65 @@ const EditProfile = () => {
     defaultValues: { ...user },
   });
 
-  const onSubmit = async (data) => {};
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    setErrMsg("");
+    try {
+      const uri = picture && (await handleFileUpload(picture));
 
-  const handleClose = () => {
-    dispatch(UpdateProfile(false));
+      const { firstName, lastName, location, profession } = data;
+
+      const res = await apiRequest({
+        url: "/users/update-user",
+        data: {
+          firstName,
+          lastName,
+          location,
+          profession,
+          profileUrl: uri ? uri : user?.profileUrl,
+        },
+        method: "PUT",
+        token: user?.token,
+      });
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg(res);
+        const newUser = { token: res?.token, ...res?.user };
+        dispatch(UserLogin(newUser));
+
+        setTimeout(() => {
+          dispatch(UpdateProfile(false));
+        }, 3000);
+      }
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
   };
   const handleSelect = (e) => {
     setPicture(e.target.files[0]);
   };
 
+  const handleClose = () => {
+    // reset();
+    dispatch(UpdateProfile(false));
+  };
+
   return (
     <>
-      <div className='fixed z-50 inset-0 overflow-y-auto'>
-        <div className='flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
+      {/* Modal */}
+
+      <div className='fixed inset-0 z-50 overflow-y-auto'>
+        <div className='flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0'>
           <div className='fixed inset-0 transition-opacity'>
             <div className='absolute inset-0 bg-[#000] opacity-70'></div>
           </div>
           <span className='hidden sm:inline-block sm:align-middle sm:h-screen'></span>
           &#8203;
           <div
-            className='inline-block align-bottom bg-primary rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full'
+            className='inline-block overflow-hidden text-left align-bottom transition-all transform rounded-lg shadow-xl bg-primary sm:my-8 sm:align-middle sm:max-w-lg sm:w-full'
             role='dialog'
             aria-modal='true'
             aria-labelledby='modal-headline'
@@ -50,7 +92,7 @@ const EditProfile = () => {
             <div className='flex justify-between px-6 pt-5 pb-2'>
               <label
                 htmlFor='name'
-                className='block font-medium text-xl text-ascent-1 text-left'
+                className='block text-xl font-medium text-left text-ascent-1'
               >
                 Edit Profile
               </label>
@@ -59,8 +101,9 @@ const EditProfile = () => {
                 <MdClose size={22} />
               </button>
             </div>
+
             <form
-              className='px-4 sm:px-6 flex flex-col gap-3 2xl:gap-6'
+              className='flex flex-col gap-3 px-4 sm:px-6 2xl:gap-6'
               onSubmit={handleSubmit(onSubmit)}
             >
               <TextInput
@@ -110,7 +153,7 @@ const EditProfile = () => {
               />
 
               <label
-                className='flex items-center gap-1 text-base text-ascent-2 hover:text-ascent-1 cursor-pointer my-4'
+                className='flex items-center gap-1 my-4 text-base cursor-pointer text-ascent-2 hover:text-ascent-1'
                 htmlFor='imgUpload'
               >
                 <input
@@ -120,6 +163,8 @@ const EditProfile = () => {
                   onChange={(e) => handleSelect(e)}
                   accept='.jpg, .png, .jpeg'
                 />
+                {/* <BiImages />
+                <span>Profile Picture</span> */}
               </label>
 
               {errMsg?.message && (
