@@ -1,14 +1,14 @@
-import React from "react";
 import { TbSocial } from "react-icons/tb";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import TextInput from "./TextInput";
-import CustomButton from "./CustomButton";
-import { useForm } from "react-hook-form";
 import { BsMoon, BsSunFill } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import { Link } from "react-router-dom";
+import CustomButton from "./CustomButton";
+import TextInput from "./TextInput";
+import { useSelector, useDispatch } from "react-redux";
 import { SetTheme } from "../redux/theme";
 import { Logout } from "../redux/userSlice";
+import { fetchPosts } from "../utils";
+import { useForm } from "react-hook-form";
 
 const TopBar = () => {
   const { theme } = useSelector((state) => state.theme);
@@ -18,7 +18,9 @@ const TopBar = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    mode: "onChange",
+  });
 
   const handleTheme = () => {
     const themeValue = theme === "light" ? "dark" : "light";
@@ -26,7 +28,9 @@ const TopBar = () => {
     dispatch(SetTheme(themeValue));
   };
 
-  const handleSearch = async (data) => {};
+  const handleSearch = async (data) => {
+    await fetchPosts(user.token, dispatch, "", data);
+  };
 
   return (
     <div className='flex items-center justify-between w-full px-4 py-3 topbar md:py-6 bg-primary'>
@@ -38,7 +42,6 @@ const TopBar = () => {
           NBOOK
         </span>
       </Link>
-
       <form
         className='items-center justify-center hidden md:flex'
         onSubmit={handleSubmit(handleSearch)}
@@ -54,7 +57,6 @@ const TopBar = () => {
           containerStyles='bg-[#0444a4] text-white px-6 py-2.5 mt-2 rounded-r-full'
         />
       </form>
-
       {/* ICONS */}
       <div className='flex items-center gap-4 text-ascent-1 text-md md:text-xl'>
         <button onClick={() => handleTheme()}>
