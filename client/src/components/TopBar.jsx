@@ -29,18 +29,18 @@ const TopBar = () => {
   const handleSearch = async (data) => {};
 
   return (
-    <div className='topbar w-full flex items-center justify-between py-3 md:py-6 px-4 bg-primary'>
-      <Link to='/' className='flex gap-2 items-center'>
+    <div className='flex items-center justify-between w-full px-4 py-3 topbar md:py-6 bg-primary'>
+      <Link to='/' className='flex items-center gap-2'>
         <div className='p-1 md:p-2 bg-[#065ad8] rounded text-white'>
           <TbSocial />
         </div>
         <span className='text-xl md:text-2xl text-[#065ad8] font-semibold'>
-          ShareFun
+          NBOOK
         </span>
       </Link>
 
       <form
-        className='hidden md:flex items-center justify-center'
+        className='items-center justify-center hidden md:flex'
         onSubmit={handleSubmit(handleSearch)}
       >
         <TextInput
@@ -56,7 +56,7 @@ const TopBar = () => {
       </form>
 
       {/* ICONS */}
-      <div className='flex gap-4 items-center text-ascent-1 text-md md:text-xl'>
+      <div className='flex items-center gap-4 text-ascent-1 text-md md:text-xl'>
         <button onClick={() => handleTheme()}>
           {theme ? <BsMoon /> : <BsSunFill />}
         </button>

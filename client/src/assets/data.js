@@ -1,7 +1,7 @@
 export const user = {
   _id: "64df3c064180b81adfe41d4b",
-  firstName: "Code",
-  lastName: "Wave",
+  firstName: "Dinuka",
+  lastName: "Nanayakkara",
   email: "codewavewithasante@gmail.com",
   friends: [
     {
@@ -149,8 +149,8 @@ export const posts = [
     _id: "64e2fe620d7868ecff1a6a86",
     userId: {
       _id: "64df39704180b81adfe41d0b",
-      firstName: "Chris",
-      lastName: "Omar",
+      firstName: "savindu",
+      lastName: "senanayake",
       profileUrl:
         "https://res.cloudinary.com/djs3wu5bg/image/upload/v1683874454/samples/people/boy-snow-hoodie.jpg",
       location: "New York, USA",
@@ -160,8 +160,8 @@ export const posts = [
       "https://res.cloudinary.com/djs3wu5bg/image/upload/v1692597858/SOCIALMEDIA/hdahstpztt1fvobc13st.png",
     likes: ["64df3c064180b81adfe41d4b"],
     comments: [],
-    createdAt: "2023-08-21T06:04:18.297Z",
-    updatedAt: "2023-08-21T06:04:18.297Z",
+    createdAt: "2024-02-21T06:04:18.297Z",
+    updatedAt: "2024-02-21T06:04:18.297Z",
     __v: 0,
   },
   {
